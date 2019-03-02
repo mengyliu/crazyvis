@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>SI 659 Final</title>
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+	<script src="https://d3js.org/d3.v4.min.js"></script>
+	<script type="text/javascript" src="script.js"></script>
+</body>
+<script>
+	d3.json("sampleResult2.json", function(d) {
+		cdict = {}
+		ldict = {}
+		for (var key in d) {
+    		let color_array = d[key][3]['color']
+    		color_array.forEach((c) => {
+    			if (c in cdict) {
+    				cdict[c] = cdict[c] + 1
+    			}
+    			else {
+    				cdict[c] = 1
+    			}
+    		})
+		}
+		var carray = Object.keys(cdict).map(function(key) {
+  			return [key, cdict[key]];
+		});
+		carray.sort(function(first, second) {
+		  return second[1] - first[1];
+		});
+		console.log(carray);
+
+		ldict = {}
+		for (var key in d) {
+    		let location = d[key][4]['owners']['location'][2]
+    		let colors = d[key][3]['color']
+    	
+			if (location in ldict) {
+				ldict[location] = ldict[location].concat(colors)
+			}
+			else {
+				ldict[location] = []
+				ldict[location] = ldict[location].concat(colors)
+			}
+		}
+		
+		function count(arr) {
+		  return arr.reduce((prev, curr) => (prev[curr] = ++prev[curr] || 1, prev), {})
+		}
+		for (var key in ldict) {
+			ldict[key] = count(ldict[key])
+		}
+		console.log(ldict)
+
+	}) 
+</script>
